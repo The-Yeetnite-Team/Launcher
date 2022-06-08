@@ -10,6 +10,7 @@ using namespace nlohmann;
 
 using namespace winrt;
 using namespace Microsoft::UI::Xaml;
+using namespace Windows::Storage;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -48,9 +49,15 @@ namespace winrt::YeetniteLauncher::implementation
 				httpClient.Close();
 				co_return;
 			}
+			ApplicationDataContainer roamingSettings{ ApplicationData::Current().RoamingSettings() };
+			auto values{ roamingSettings.Values() };
+			std::string username = responseJson.at("user").at("username").get<std::string>();
+			values.Insert(L"Username", Windows::Foundation::PropertyValue::CreateString(std::wstring(username.begin(), username.end())));
+			winrt::hstring usernameFromSettings{ winrt::unbox_value<winrt::hstring>(values.Lookup(L"Username")) };
+			OutputDebugString(usernameFromSettings.c_str());
 			loginFrame().Navigate(xaml_typename<HomePage>());
 		}
-		catch (winrt::hresult_error const& ex)
+		catch (winrt::hresult_error const&)
 		{
 			OutputDebugString(L"Failed to make network request.\n");
 			text.Text(L"Failed to make network request. Check your internet and try again.");

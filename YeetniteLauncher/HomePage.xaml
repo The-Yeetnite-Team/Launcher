@@ -8,8 +8,7 @@
     mc:Ignorable="d">
 
     <Frame x:Name="homeFrame">
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <Button x:Name="myButton" Click="myButton_Click">Click Me</Button>
-        </StackPanel>
+        <Grid Background="#1f1f1f">
+        </Grid>
     </Frame>
 </Page>
