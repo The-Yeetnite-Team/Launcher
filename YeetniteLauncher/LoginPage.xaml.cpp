@@ -49,12 +49,10 @@ namespace winrt::YeetniteLauncher::implementation
 				httpClient.Close();
 				co_return;
 			}
-			ApplicationDataContainer roamingSettings{ ApplicationData::Current().RoamingSettings() };
-			auto values{ roamingSettings.Values() };
+			ApplicationDataContainer localSettings{ ApplicationData::Current().LocalSettings()};
+			auto values{ localSettings.Values() };
 			std::string username = responseJson.at("user").at("username").get<std::string>();
 			values.Insert(L"Username", Windows::Foundation::PropertyValue::CreateString(std::wstring(username.begin(), username.end())));
-			winrt::hstring usernameFromSettings{ winrt::unbox_value<winrt::hstring>(values.Lookup(L"Username")) };
-			OutputDebugString(usernameFromSettings.c_str());
 			loginFrame().Navigate(xaml_typename<HomePage>());
 		}
 		catch (winrt::hresult_error const&)
