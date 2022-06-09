@@ -8,7 +8,7 @@
     <CppWinRTRootNamespaceAutoMerge>true</CppWinRTRootNamespaceAutoMerge>
     <MinimalCoreWin>true</MinimalCoreWin>
     <ProjectGuid>{37578afa-44fd-4151-a90a-46e5dc0d99f3}</ProjectGuid>
-    <ProjectName>YeetniteLauncher</ProjectName>
+    <ProjectName>Yeetnite Launcher</ProjectName>
     <RootNamespace>YeetniteLauncher</RootNamespace>
     <!--
       $(TargetName) should be same as $(RootNamespace) so that the produced binaries (.exe/.pri/etc.)
