@@ -7,7 +7,7 @@ namespace winrt::YeetniteLauncher::implementation
     struct LoginPage : LoginPageT<LoginPage>
     {
         LoginPage();
-        Windows::Foundation::IAsyncAction Login(winrt::Windows::Foundation::IInspectable const& sender, winrt::Microsoft::UI::Xaml::RoutedEventArgs const& e);
+        Windows::Foundation::IAsyncAction Login(Windows::Foundation::IInspectable const& sender, Microsoft::UI::Xaml::RoutedEventArgs const& e);
     };
 }
 
