@@ -27,7 +27,7 @@ App::App()
     {
         if (IsDebuggerPresent())
         {
-            auto errorMessage = e.Message();
+            hstring errorMessage = e.Message();
             __debugbreak();
         }
     });

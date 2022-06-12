@@ -11,6 +11,6 @@ namespace winrt::YeetniteLauncher::implementation
         void OnLaunched(Microsoft::UI::Xaml::LaunchActivatedEventArgs const&);
 
     private:
-        winrt::Microsoft::UI::Xaml::Window window{ nullptr };
+        Microsoft::UI::Xaml::Window window{ nullptr };
     };
 }

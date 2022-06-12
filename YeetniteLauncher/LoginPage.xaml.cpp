@@ -38,7 +38,7 @@ namespace winrt::YeetniteLauncher::implementation
 
 		try
 		{
-			winrt::hstring response{ co_await httpClient.GetStringAsync(uri) };
+			hstring response{ co_await httpClient.GetStringAsync(uri) };
 			json responseJson = json::parse(response);
 			if (!responseJson.at("success").get<bool>()) {
 				text.Text(L"Invalid username or password.");
@@ -50,12 +50,12 @@ namespace winrt::YeetniteLauncher::implementation
 				co_return;
 			}
 			ApplicationDataContainer localSettings{ ApplicationData::Current().LocalSettings()};
-			auto values{ localSettings.Values() };
+			Windows::Foundation::Collections::IPropertySet values{ localSettings.Values() };
 			std::string username = responseJson.at("user").at("username").get<std::string>();
 			values.Insert(L"Username", Windows::Foundation::PropertyValue::CreateString(std::wstring(username.begin(), username.end())));
 			loginFrame().Navigate(xaml_typename<HomePage>());
 		}
-		catch (winrt::hresult_error const&)
+		catch (hresult_error const&)
 		{
 			OutputDebugString(L"Failed to make network request.\n");
 			text.Text(L"Failed to make network request. Check your internet and try again.");
