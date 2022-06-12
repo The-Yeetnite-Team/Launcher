@@ -49,11 +49,10 @@ namespace winrt::YeetniteLauncher::implementation
 				httpClient.Close();
 				co_return;
 			}
-			// BROKEN
-			/*ApplicationDataContainer localSettings{ApplicationData::Current().LocalSettings()};
+			ApplicationDataContainer localSettings{ ApplicationData::Current().LocalSettings()};
 			auto values{ localSettings.Values() };
 			std::string username = responseJson.at("user").at("username").get<std::string>();
-			values.Insert(L"Username", Windows::Foundation::PropertyValue::CreateString(std::wstring(username.begin(), username.end())));*/
+			values.Insert(L"Username", Windows::Foundation::PropertyValue::CreateString(std::wstring(username.begin(), username.end())));
 			loginFrame().Navigate(xaml_typename<HomePage>());
 		}
 		catch (winrt::hresult_error const&)

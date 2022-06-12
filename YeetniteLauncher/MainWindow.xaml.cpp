@@ -16,6 +16,17 @@ namespace winrt::YeetniteLauncher::implementation
 	MainWindow::MainWindow()
 	{
 		InitializeComponent();
-		rootFrame().Navigate(xaml_typename<LoginPage>());
+		try {
+			auto username = winrt::unbox_value<winrt::hstring>(ApplicationData::Current().LocalSettings().Values().Lookup(L"Username")).c_str();
+			if (username != nullptr)
+				rootFrame().Navigate(xaml_typename<HomePage>());
+			else
+				rootFrame().Navigate(xaml_typename<LoginPage>());
+		}
+		catch (winrt::hresult_no_interface e) {
+			OutputDebugString(L"We failed again:\n\n");
+			OutputDebugString(e.message().c_str());
+			rootFrame().Navigate(xaml_typename<LoginPage>());
+		}
 	}
 }

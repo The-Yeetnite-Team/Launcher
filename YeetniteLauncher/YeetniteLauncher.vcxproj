@@ -14,19 +14,17 @@
       $(TargetName) should be same as $(RootNamespace) so that the produced binaries (.exe/.pri/etc.)
       have a name that matches the .winmd
     -->
-    <TargetName>Yeetnite Launcher</TargetName>
+    <TargetName>$(RootNamespace)</TargetName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <MinimumVisualStudioVersion>16.0</MinimumVisualStudioVersion>
     <AppContainerApplication>false</AppContainerApplication>
-    <AppxPackage>false</AppxPackage>
+    <AppxPackage>true</AppxPackage>
     <ApplicationType>Windows Store</ApplicationType>
     <ApplicationTypeRevision>10.0</ApplicationTypeRevision>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformMinVersion>10.0.17763.0</WindowsTargetPlatformMinVersion>
     <UseWinUI>true</UseWinUI>
     <EnableMsixTooling>true</EnableMsixTooling>
-    <WindowsPackageType>None</WindowsPackageType>
-    <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <ItemGroup Label="ProjectConfigurations">
@@ -119,9 +117,6 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
-    <Manifest Include="app.manifest" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="HomePage.xaml.h">
       <DependentUpon>HomePage.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -188,6 +183,13 @@
     </Midl>
   </ItemGroup>
   <ItemGroup>
+    <Image Include="Assets\LockScreenLogo.scale-200.png" />
+    <Image Include="Assets\SplashScreen.scale-200.png" />
+    <Image Include="Assets\Square150x150Logo.scale-200.png" />
+    <Image Include="Assets\Square44x44Logo.scale-200.png" />
+    <Image Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
+    <Image Include="Assets\StoreLogo.png" />
+    <Image Include="Assets\Wide310x150Logo.scale-200.png" />
     <Image Include="Assets\yeetnite.png" />
   </ItemGroup>
   <!-- 
