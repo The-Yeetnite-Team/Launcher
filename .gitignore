@@ -1,6 +1,6 @@
 .vs**
 x64**
-packages**
+packages/**
 YeetniteLauncher/Generated\ Files
 /YeetniteLauncher/Debug
 /YeetniteLauncher/Release
