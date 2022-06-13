@@ -13,6 +13,8 @@ variables:
   buildConfiguration: 'Release'
   stagingDirectory: 'packages'
   signingCertificate: 'yeetnite-team.pfx'
+  msbuildOutputDirectory: 'x64\Release\YeetniteLauncher'
+  packagesDirectory: 'packages'
 
 steps:
 - task: NuGetCommand@2
@@ -20,22 +22,25 @@ steps:
   inputs:
     restoreSolution: '$(solution)'
 
+- task: VSBuild@1
+  inputs:
+    solution: '$(solution)'
+    vsVersion: '17.0'
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
+    clean: true
+    msbuildArchitecture: 'x64'
+
 - task: MsixPackaging@1
   inputs:
-    outputPath: '$(stagingDirectory)\Yeetnite Launcher.msix'
-    solution: '$(solution)'
-    clean: true
-    generateBundle: true
-    buildConfiguration: 'release'
-    buildForX86: false
+    outputPath: '$(packagesDirectory)\Yeetnite Launcher.msix'
+    buildSolution: false
+    inputDirectory: '$(msbuildOutputDirectory)'
+    generateBundle: false
     updateAppVersion: false
-    appPackageDistributionMode: 'SideloadOnly'
-    msbuildLocationMethod: 'version'
-    msbuildVersion: 'latest'
-    msbuildArchitecture: 'x64'
 
 - task: MsixSigning@1
   inputs:
-    package: '$(stagingDirectory)\Yeetnite Launcher.msix'
+    package: '$(packagesDirectory)\Yeetnite Launcher.msix'
     certificate: '$(signingCertificate)'
     passwordVariable: 'signingCertificatePassword'
