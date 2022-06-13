@@ -1,0 +1,29 @@
+trigger:
+- main
+
+pool:
+  vmImage: 'windows-2022'
+  demands:
+  - msbuild
+  - visualstudio
+
+variables:
+  solution: '**/*.sln'
+  buildPlatform: 'x64'
+  buildConfiguration: 'Release'
+
+steps:
+- task: NuGetCommand@2
+  displayName: 'Install Yeetnite Launcher Dependencies'
+  inputs:
+    restoreSolution: '$(solution)'
+
+- task: VSBuild@1
+  displayName: 'Build Yeetnite Launcher'
+  inputs:
+    solution: '$(solution)'
+    vsVersion: '17.0'
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
+    clean: true
+
