@@ -2,12 +2,14 @@
 
 #include "App.xaml.h"
 #include "MainWindow.xaml.h"
+#include "HomeWindow.xaml.h"
 
 using namespace winrt;
 using namespace Windows::Foundation;
 using namespace Microsoft::UI::Xaml;
 using namespace Microsoft::UI::Xaml::Controls;
 using namespace Microsoft::UI::Xaml::Navigation;
+using namespace Windows::Storage;
 using namespace YeetniteLauncher;
 using namespace YeetniteLauncher::implementation;
 
@@ -20,17 +22,17 @@ using namespace YeetniteLauncher::implementation;
 /// </summary>
 App::App()
 {
-    InitializeComponent();
+	InitializeComponent();
 
 #if defined _DEBUG && !defined DISABLE_XAML_GENERATED_BREAK_ON_UNHANDLED_EXCEPTION
-    UnhandledException([this](IInspectable const&, UnhandledExceptionEventArgs const& e)
-    {
-        if (IsDebuggerPresent())
-        {
-            hstring errorMessage = e.Message();
-            __debugbreak();
-        }
-    });
+	UnhandledException([this](IInspectable const&, UnhandledExceptionEventArgs const& e)
+		{
+			if (IsDebuggerPresent())
+			{
+				hstring errorMessage = e.Message();
+				__debugbreak();
+			}
+		});
 #endif
 }
 
@@ -41,7 +43,20 @@ App::App()
 /// <param name="e">Details about the launch request and process.</param>
 void App::OnLaunched(LaunchActivatedEventArgs const&)
 {
-    window = make<MainWindow>();
-    window.Title(L"Yeetnite Launcher");
-    window.Activate();
+	Windows::Foundation::IInspectable username = ApplicationData::Current().LocalSettings().Values().Lookup(L"Username");
+
+	window = make<MainWindow>();
+	homeWindow = make<HomeWindow>();
+
+	window.Title(L"Yeetnite Launcher");
+	homeWindow.Title(L"Yeetnite Launcher");
+
+	if (username != nullptr) {
+		homeWindow.Activate();
+		window.Close();
+		return;
+	}
+	
+	window.Activate();
+	homeWindow.Close();
 }

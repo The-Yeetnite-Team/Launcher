@@ -117,12 +117,8 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="HomePage.xaml.h">
-      <DependentUpon>HomePage.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </ClInclude>
-    <ClInclude Include="LoginPage.xaml.h">
-      <DependentUpon>LoginPage.xaml</DependentUpon>
+    <ClInclude Include="HomeWindow.xaml.h">
+      <DependentUpon>HomeWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </ClInclude>
     <ClInclude Include="nlohmann\json.hpp" />
@@ -136,21 +132,14 @@
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml" />
-    <Page Include="HomePage.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="LoginPage.xaml">
+    <Page Include="HomeWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Include="MainWindow.xaml" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="HomePage.xaml.cpp">
-      <DependentUpon>HomePage.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </ClCompile>
-    <ClCompile Include="LoginPage.xaml.cpp">
-      <DependentUpon>LoginPage.xaml</DependentUpon>
+    <ClCompile Include="HomeWindow.xaml.cpp">
+      <DependentUpon>HomeWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </ClCompile>
     <ClCompile Include="pch.cpp">
@@ -169,12 +158,8 @@
       <SubType>Code</SubType>
       <DependentUpon>App.xaml</DependentUpon>
     </Midl>
-    <Midl Include="HomePage.idl">
-      <DependentUpon>HomePage.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Midl>
-    <Midl Include="LoginPage.idl">
-      <DependentUpon>LoginPage.xaml</DependentUpon>
+    <Midl Include="HomeWindow.idl">
+      <DependentUpon>HomeWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Midl>
     <Midl Include="MainWindow.idl">

@@ -1,7 +1,7 @@
 ﻿#include "pch.h"
-#include "HomePage.xaml.h"
-#if __has_include("HomePage.g.cpp")
-#include "HomePage.g.cpp"
+#include "HomeWindow.xaml.h"
+#if __has_include("HomeWindow.g.cpp")
+#include "HomeWindow.g.cpp"
 #endif
 
 using namespace winrt;
@@ -12,7 +12,7 @@ using namespace Microsoft::UI::Xaml;
 
 namespace winrt::YeetniteLauncher::implementation
 {
-    HomePage::HomePage()
+    HomeWindow::HomeWindow()
     {
         InitializeComponent();
     }

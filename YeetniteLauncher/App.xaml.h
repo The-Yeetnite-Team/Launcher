@@ -12,5 +12,6 @@ namespace winrt::YeetniteLauncher::implementation
 
     private:
         Microsoft::UI::Xaml::Window window{ nullptr };
+        Microsoft::UI::Xaml::Window homeWindow{ nullptr };
     };
 }

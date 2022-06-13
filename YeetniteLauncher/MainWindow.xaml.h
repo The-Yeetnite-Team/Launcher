@@ -7,6 +7,7 @@ namespace winrt::YeetniteLauncher::implementation
     struct MainWindow : MainWindowT<MainWindow>
     {
         MainWindow();
+        Windows::Foundation::IAsyncAction Login(Windows::Foundation::IInspectable const& sender, Microsoft::UI::Xaml::RoutedEventArgs const& e);
     };
 }
 
