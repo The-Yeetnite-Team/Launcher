@@ -32,11 +32,11 @@ namespace winrt::YeetniteLauncher::implementation
 		Windows::Foundation::Uri uri{ std::format(L"https://www.yeetnite.ml/api/user?username={}&password={}", Username().Text().c_str(), Password().Password().c_str()).c_str() };
 		Windows::Web::Http::HttpClient httpClient{};
 
-		Controls::ContentDialog errorDialog{};
-		errorDialog.Title(box_value(L"Error"));
+		Controls::ContentDialog resultDialog{};
+		resultDialog.Title(box_value(L"Error"));
 		Controls::TextBlock text{};
-		errorDialog.PrimaryButtonText(L"OK");
-		errorDialog.XamlRoot(this->Content().XamlRoot());
+		resultDialog.PrimaryButtonText(L"OK");
+		resultDialog.XamlRoot(this->Content().XamlRoot());
 
 		try
 		{
@@ -44,8 +44,8 @@ namespace winrt::YeetniteLauncher::implementation
 			json responseJson = json::parse(response);
 			if (!responseJson.at("success").get<bool>()) {
 				text.Text(L"Invalid username or password.");
-				errorDialog.Content(text);
-				errorDialog.ShowAsync();
+				resultDialog.Content(text);
+				resultDialog.ShowAsync();
 				progressRing().IsActive(false);
 				loginButton().IsEnabled(true);
 				httpClient.Close();
@@ -55,12 +55,17 @@ namespace winrt::YeetniteLauncher::implementation
 			Windows::Foundation::Collections::IPropertySet values{ localSettings.Values() };
 			std::string username = responseJson.at("user").at("username").get<std::string>();
 			values.Insert(L"Username", Windows::Foundation::PropertyValue::CreateString(std::wstring(username.begin(), username.end())));
+
+			text.Text(L"You are now logged in! Please restart the app to access the home page.");
+			resultDialog.Content(text);
+			resultDialog.Title(box_value(L"Success"));
+			resultDialog.ShowAsync();
 		}
 		catch (hresult_error const&)
 		{
 			text.Text(L"Failed to make network request. Check your internet and try again.");
-			errorDialog.Content(text);
-			errorDialog.ShowAsync();
+			resultDialog.Content(text);
+			resultDialog.ShowAsync();
 		}
 
 		progressRing().IsActive(false);
