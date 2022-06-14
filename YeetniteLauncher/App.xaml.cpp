@@ -43,18 +43,9 @@ App::App()
 /// <param name="e">Details about the launch request and process.</param>
 void App::OnLaunched(LaunchActivatedEventArgs const&)
 {
-	window = make<MainWindow>();
-	homeWindow = make<HomeWindow>();
+	if (ApplicationData::Current().LocalSettings().Values().Lookup(L"Username") != nullptr) window = make<HomeWindow>();
+	else window = make<MainWindow>();
 
 	window.Title(L"Yeetnite Launcher");
-	homeWindow.Title(L"Yeetnite Launcher");
-
-	if (ApplicationData::Current().LocalSettings().Values().Lookup(L"Username") != nullptr) {
-		homeWindow.Activate();
-		window.Close();
-		return;
-	}
-	
 	window.Activate();
-	homeWindow.Close();
 }
