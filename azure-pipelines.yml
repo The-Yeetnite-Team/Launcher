@@ -16,7 +16,6 @@ variables:
   msbuildOutputDirectory: 'x64\Release\YeetniteLauncher'
   packagesDirectory: 'packages'
   msixOutputPath: '$(packagesDirectory)\Yeetnite Launcher.msix'
-  archiveOutputPath: '$(packagesDirectory)\Yeetnite Launcher.7z'
 
 steps:
 - task: NuGetCommand@2
@@ -50,19 +49,9 @@ steps:
     certificate: '$(signingCertificate)'
     passwordVariable: 'signingCertificatePassword'
 
-- task: ArchiveFiles@2
-  displayName: 'Compress Installer Package'
-  inputs:
-    rootFolderOrFile: '$(msixOutputPath)'
-    includeRootFolder: false
-    archiveType: '7z'
-    sevenZipCompression: 'ultra'
-    archiveFile: '$(archiveOutputPath)'
-    replaceExistingArchive: true
-
 - task: PublishBuildArtifacts@1
   displayName: 'Upload Release'
   inputs:
-    PathtoPublish: '$(archiveOutputPath)'
+    PathtoPublish: '$(msixOutputPath)'
     ArtifactName: 'Yeetnite Launcher'
     publishLocation: 'Container'
