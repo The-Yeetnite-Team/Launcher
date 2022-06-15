@@ -10,7 +10,12 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
-- task: Bash@3
+- task: PowerShell@2
   inputs:
     targetType: 'inline'
-    script: 'echo $(AZURE_PAT)'
+    script: |
+      # Update Package Version
+      az pipelines variable-group variable update --organization https://dev.azure.com/yeetnite/ --project "Yeetnite Launcher" --id 2 --name version --value $(git describe).substring(9)
+      # Update Latest Tag Commit Hash
+      az pipelines variable-group variable update --organization https://dev.azure.com/yeetnite/ --project "Yeetnite Launcher" --id 2 --name commitSHA --value $(git log $(git describe) -1 --pretty=%H)
+    failOnStderr: true
