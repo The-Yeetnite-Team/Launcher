@@ -11,6 +11,15 @@ variables:
   - group: build
   - group: git
 
+resources:
+  pipelines:
+    - pipeline: updateMetadata
+      source: 'Update Version Metadata'
+      trigger:
+       branches:
+       - main
+       - azure-devops
+
 steps:
 - task: NuGetCommand@2
   displayName: 'Install Yeetnite Launcher Dependencies'
