@@ -17,7 +17,7 @@ steps:
     targetType: 'inline'
     script: |
       # Login using Personal Access Token
-      echo $(azurePAC) | az devops login --organization https://dev.azure.com/yeetnite/
+      echo "$(azurePAC)" | az devops login --organization https://dev.azure.com/yeetnite/
       # Update Package Version
       az pipelines variable-group variable update --organization https://dev.azure.com/yeetnite/ --project "Yeetnite Launcher" --id 2 --name version --value $(git describe).substring(9)
       # Update Latest Tag Commit Hash
