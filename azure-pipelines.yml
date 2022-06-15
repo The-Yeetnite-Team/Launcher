@@ -9,8 +9,19 @@ pool:
 
 variables:
   - group: build
+  - group: git
 
 steps:
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      # Update Package Version
+      az pipelines variable-group variable update --organization https://dev.azure.com/yeetnite/ --project "Yeetnite Launcher" --id 2 --name version --value $(git describe).substring(9)
+      # Update Latest Tag Commit Hash
+      az pipelines variable-group variable update --organization https://dev.azure.com/yeetnite/ --project "Yeetnite Launcher" --id 2 --name commitSHA --value $(git log $(git describe) -1 --pretty=%H)
+    failOnStderr: true
+
 - task: NuGetCommand@2
   displayName: 'Install Yeetnite Launcher Dependencies'
   inputs:
@@ -27,13 +38,14 @@ steps:
     msbuildArchitecture: 'x64'
 
 - task: MsixPackaging@1
-  displayName: 'Package Yeetnite Launcher'
   inputs:
     outputPath: '$(build.msixOutputPath)'
     buildSolution: false
     inputDirectory: '$(build.msbuildOutputDirectory)'
     generateBundle: false
-    updateAppVersion: false
+    updateAppVersion: true
+    manifestFile: '$(build.manifestLocation)'
+    appVersion: '$(version)'
 
 - task: MsixSigning@1
   displayName: 'Sign Installer Package'
