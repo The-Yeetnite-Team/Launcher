@@ -8,50 +8,43 @@ pool:
   - visualstudio
 
 variables:
-  solution: 'Yeetnite Launcher.sln'
-  buildPlatform: 'x64'
-  buildConfiguration: 'Release'
-  stagingDirectory: 'packages'
-  signingCertificate: 'yeetnite-team.pfx'
-  msbuildOutputDirectory: 'x64\Release\YeetniteLauncher'
-  packagesDirectory: 'packages'
-  msixOutputPath: '$(packagesDirectory)\Yeetnite Launcher.msix'
+  - group: build
 
 steps:
 - task: NuGetCommand@2
   displayName: 'Install Yeetnite Launcher Dependencies'
   inputs:
-    restoreSolution: '$(solution)'
+    restoreSolution: '$(build.solution)'
 
 - task: VSBuild@1
   displayName: 'Compile Yeetnite Launcher'
   inputs:
-    solution: '$(solution)'
+    solution: '$(build.solution)'
     vsVersion: '17.0'
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
+    platform: '$(build.platform)'
+    configuration: '$(build.configuration)'
     clean: true
     msbuildArchitecture: 'x64'
 
 - task: MsixPackaging@1
   displayName: 'Package Yeetnite Launcher'
   inputs:
-    outputPath: '$(msixOutputPath)'
+    outputPath: '$(build.msixOutputPath)'
     buildSolution: false
-    inputDirectory: '$(msbuildOutputDirectory)'
+    inputDirectory: '$(build.msbuildOutputDirectory)'
     generateBundle: false
     updateAppVersion: false
 
 - task: MsixSigning@1
   displayName: 'Sign Installer Package'
   inputs:
-    package: '$(msixOutputPath)'
-    certificate: '$(signingCertificate)'
+    package: '$(build.msixOutputPath)'
+    certificate: '$(build.signingCertificate)'
     passwordVariable: 'signingCertificatePassword'
 
 - task: PublishBuildArtifacts@1
   displayName: 'Upload Release'
   inputs:
-    PathtoPublish: '$(msixOutputPath)'
+    PathtoPublish: '$(build.msixOutputPath)'
     ArtifactName: 'Yeetnite Launcher'
     publishLocation: 'Container'
