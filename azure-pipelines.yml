@@ -16,8 +16,12 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
+      # Install Azure CLI DevOps Extension
+      az extension add --name azure-devops
+      # Make sure we can get the PAT
+      echo "personal access token is $(build.azurePAT)"
       # Login using Personal Access Token
-      echo "$(build.azurePAC)" | az devops login --organization https://dev.azure.com/yeetnite/
+      echo "$(build.azurePAT)" | az devops login --organization https://dev.azure.com/yeetnite/
       # Update Package Version
       az pipelines variable-group variable update --organization https://dev.azure.com/yeetnite/ --project "Yeetnite Launcher" --id 2 --name version --value $(git describe).substring(9)
       # Update Latest Tag Commit Hash
