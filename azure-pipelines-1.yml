@@ -15,7 +15,7 @@ steps:
     targetType: 'inline'
     script: |
       # Update Package Version
-      az pipelines variable-group variable update --organization https://dev.azure.com/yeetnite/ --project "Yeetnite Launcher" --id 2 --name version --value "$($(git describe).substring(9)).0"
+      az pipelines variable-group variable update --organization https://dev.azure.com/yeetnite/ --project "Yeetnite Launcher" --id 2 --name version --value "$(git describe).substring(9)"
       # Update Latest Tag Commit Hash
       az pipelines variable-group variable update --organization https://dev.azure.com/yeetnite/ --project "Yeetnite Launcher" --id 2 --name commitSHA --value $(git log $(git describe) -1 --pretty=%H)
     failOnStderr: true
