@@ -9,7 +9,6 @@ pool:
 
 variables:
   - group: build
-  - group: git
 
 resources:
   pipelines:
@@ -21,41 +20,36 @@ resources:
        - azure-devops
 
 steps:
+- task: UseDotNet@2
+  inputs:
+    packageType: 'sdk'
+    version: '6.0.301'
+    performMultiLevelLookup: true
+
 - task: NuGetCommand@2
   displayName: 'Install Yeetnite Launcher Dependencies'
   inputs:
     restoreSolution: '$(build.solution)'
 
-- task: VSBuild@1
-  displayName: 'Compile Yeetnite Launcher'
+- task: MSBuild@1
   inputs:
     solution: '$(build.solution)'
-    vsVersion: '17.0'
-    platform: '$(build.platform)'
-    configuration: '$(build.configuration)'
-    clean: true
+    msbuildVersion: '17.0'
     msbuildArchitecture: 'x64'
+    clean: true
 
-- task: MsixPackaging@1
+- task: ArchiveFiles@2
   inputs:
-    outputPath: '$(build.msixOutputPath)'
-    buildSolution: false
-    inputDirectory: '$(build.msbuildOutputDirectory)'
-    generateBundle: false
-    updateAppVersion: true
-    manifestFile: '$(build.manifestLocation)'
-    appVersion: '$(version)'
-
-- task: MsixSigning@1
-  displayName: 'Sign Installer Package'
-  inputs:
-    package: '$(build.msixOutputPath)'
-    certificate: '$(build.signingCertificate)'
-    passwordVariable: 'build.signingCertificatePassword'
+    rootFolderOrFile: '$(build.msbuildOutputDirectory)'
+    includeRootFolder: false
+    archiveType: '7z'
+    sevenZipCompression: 'ultra'
+    archiveFile: 'Yeetnite Launcher.7z'
+    replaceExistingArchive: true
 
 - task: PublishBuildArtifacts@1
   displayName: 'Upload Release'
   inputs:
-    PathtoPublish: '$(build.msixOutputPath)'
+    PathtoPublish: 'Yeetnite Launcher.7z'
     ArtifactName: 'Yeetnite Launcher'
     publishLocation: 'Container'
