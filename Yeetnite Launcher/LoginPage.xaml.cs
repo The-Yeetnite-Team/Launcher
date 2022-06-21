@@ -1,0 +1,64 @@
+﻿using Newtonsoft.Json;
+using System.Diagnostics;
+using System.Net.Http;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
+
+namespace Yeetnite_Launcher
+{
+    /// <summary>
+    /// Interaction logic for LoginPage.xaml
+    /// </summary>
+    public partial class LoginPage : Page
+    {
+        static readonly HttpClient httpClient = new();
+
+        public LoginPage()
+        {
+            InitializeComponent();
+        }
+
+        private async void Login(object sender, RoutedEventArgs e)
+        {
+            if (Username_Field.Text == "" || Password_Field.Password == "")
+            {
+                Toast.ShowError("Please fill in all required fields and try again");
+                return;
+            }
+            LoadingElement.Visibility = Visibility.Visible;
+
+            try
+            {
+                string response = await httpClient.GetStringAsync(string.Format("https://www.yeetnite.ml/api/launcherLogin?username={0}&password={1}", Username_Field.Text, Password_Field.Password));
+                if (response.Contains("Invalid username or password"))
+                {
+                    Toast.ShowError("Invalid username or password");
+                    LoadingElement.Visibility = Visibility.Hidden;
+                    return;
+                }
+                User? user = JsonConvert.DeserializeObject<User>(response);
+                Debug.WriteLine(user?.GetUsername() + " " + user?.GetAccessToken());
+            }
+            catch (HttpRequestException ex)
+            {
+                Debug.WriteLine(ex.Message);
+                Toast.ShowError("Please check your internet connection and try again");
+                LoadingElement.Visibility = Visibility.Hidden;
+                return;
+            }
+
+            LoadingElement.Visibility = Visibility.Hidden;
+        }
+
+        private void SetHoverMouse(object sender, MouseEventArgs e)
+        {
+            ContentArea.Cursor = Cursors.Hand;
+        }
+
+        private void SetNormalMouse(object sender, MouseEventArgs e)
+        {
+            ContentArea.Cursor = Cursors.Arrow;
+        }
+    }
+}
