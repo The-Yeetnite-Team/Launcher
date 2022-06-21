@@ -36,6 +36,8 @@ steps:
     solution: '$(build.solution)'
     msbuildVersion: '17.0'
     msbuildArchitecture: 'x64'
+    configuration: '$(build.configuration)'
+    platform: '$(build.platform)'
     clean: true
 
 - task: ArchiveFiles@2
