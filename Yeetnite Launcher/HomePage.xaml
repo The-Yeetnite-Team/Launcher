@@ -4,6 +4,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Yeetnite_Launcher"
+      xmlns:ui="http://schemas.modernwpf.com/2019"
       mc:Ignorable="d" 
       d:DesignHeight="720" d:DesignWidth="1280"
       Title="HomePage">
@@ -11,6 +12,9 @@
     <Grid>
         <Image x:Name="Fortnite_Background_Image" Height="445" Width="1280" Margin="0,0,0,275" />
         <Rectangle x:Name="Shadow" Margin="0,0,880,275" Fill="Black" Opacity="0.75" d:LayoutOverrides="VerticalAlignment" />
+        <ui:SimpleStackPanel x:Name="Shadow_Content" Width="340" Height="445" Margin="30,0,910,275" d:LayoutOverrides="Width">
+            <TextBlock TextWrapping="Wrap" Text="Fortnite" Foreground="White" FontSize="30" FontWeight="Bold"/>
 
+        </ui:SimpleStackPanel>
     </Grid>
 </Page>

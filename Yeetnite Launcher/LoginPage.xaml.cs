@@ -38,7 +38,11 @@ namespace Yeetnite_Launcher
                     return;
                 }
                 User? user = JsonConvert.DeserializeObject<User>(response);
-                Debug.WriteLine(user?.GetUsername() + " " + user?.GetAccessToken());
+                Settings.Username(user?.GetUsername() ?? string.Empty);
+                Settings.AccessToken(user?.GetAccessToken() ?? string.Empty);
+
+                Process.Start(System.Environment.ProcessPath ?? string.Empty);
+                Application.Current.Shutdown();
             }
             catch (HttpRequestException ex)
             {

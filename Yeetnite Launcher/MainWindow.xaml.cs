@@ -12,12 +12,13 @@ namespace Yeetnite_Launcher
         public MainWindow()
         {
             InitializeComponent();
+            Settings.Init();
         }
 
         private void OnLaunched(object sender, RoutedEventArgs e)
         {
             // TODO Read settings values instead
-            if (true) RootFrame.Navigate(new HomePage());
+            if (Settings.Username() != string.Empty) RootFrame.Navigate(new HomePage());
             else RootFrame.Navigate(new LoginPage());
         }
     }
