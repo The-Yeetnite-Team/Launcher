@@ -10,15 +10,6 @@ pool:
 variables:
   - group: build
 
-resources:
-  pipelines:
-    - pipeline: updateMetadata
-      source: 'Update Version Metadata'
-      trigger:
-       branches:
-       - main
-       - azure-devops
-
 steps:
 - task: UseDotNet@2
   inputs:
