@@ -5,16 +5,33 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Yeetnite_Launcher"
       xmlns:ui="http://schemas.modernwpf.com/2019"
+      xmlns:fa="http://schemas.fontawesome.io/icons/"
       mc:Ignorable="d" 
       d:DesignHeight="720" d:DesignWidth="1280"
-      Title="HomePage">
+      Title="Yeetnite Launcher">
 
-    <Grid>
+    <Grid x:Name="ContentGrid">
         <Image x:Name="Fortnite_Background_Image" Height="445" Width="1280" Margin="0,0,0,275" />
         <Rectangle x:Name="Shadow" Margin="0,0,880,275" Fill="Black" Opacity="0.75" d:LayoutOverrides="VerticalAlignment" />
-        <ui:SimpleStackPanel x:Name="Shadow_Content" Width="340" Height="445" Margin="30,0,910,275" d:LayoutOverrides="Width">
-            <TextBlock TextWrapping="Wrap" Text="Fortnite" Foreground="White" FontSize="30" FontWeight="Bold"/>
+        <ui:SimpleStackPanel x:Name="Shadow_Content" Width="340" Height="445" Margin="50,30,930,275" d:LayoutOverrides="Width">
+            <TextBlock x:Name="Title" TextWrapping="Wrap" Text="Fortnite" Foreground="White" FontSize="30" FontWeight="Bold"/>
+            <TextBlock x:Name="Version_Text" FontWeight="SemiBold" TextWrapping="Wrap" Text="Select Game Version." Foreground="White" FontSize="20"/>
+            <TextBlock x:Name="Description" Margin="0,10,60,10" TextWrapping="Wrap" Text="Fortnite includes Battle Royale, the completely free 100-player PvP mode. One giant map. A Battle Bus. Last one standing wins." Foreground="#FFCCCCCC" FontFamily="Segoe UI" />
 
+            <ui:SimpleStackPanel Orientation="Horizontal" Margin="0,120,0,0">
+                <Button x:Name="Launch_Button" Width="230" Height="65" Content="Launch" FontWeight="SemiBold" FontSize="20" Foreground="White" Background="#8fbb8a" MouseEnter="SetHoverMouse" MouseLeave="SetRegularMouse" HorizontalAlignment="Center" />
+                <Button Background="#75a36f" MouseEnter="SetHoverMouse" MouseLeave="SetRegularMouse" x:Name="Settings_Button" Width="40" Height="65" HorizontalAlignment="Center" VerticalAlignment="Center" BorderThickness="0,0,0,0">
+                    <fa:ImageAwesome Foreground="White" Icon="Gear" />
+                </Button>
+            </ui:SimpleStackPanel>
+
+            <Separator Margin="0,15,70,5" Width="270" />
+
+            <TextBlock Margin="60,0,144,0" FontSize="18">
+                <Hyperlink x:Name="Discord_Link" MouseEnter="SetHoveredLink" MouseLeave="SetRegularLink" TextDecorations="None" Background="Transparent" Foreground="White" NavigateUri="https://discord.gg/NU89sKzfQX" RequestNavigate="OpenLink">
+                    Join Our Discord!
+                </Hyperlink>
+            </TextBlock>
         </ui:SimpleStackPanel>
     </Grid>
 </Page>
