@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -38,16 +39,28 @@ namespace Yeetnite_Launcher
             e.Handled = true;
         }
 
-        private void SetHoveredLink(object sender, MouseEventArgs e)
+        private void SetHoveredDiscordLink(object sender, MouseEventArgs e)
         {
             SetHoverMouse(sender, e);
-            Discord_Link.Foreground = new BrushConverter().ConvertFrom("#9326ae") as Brush;
+            Discord_Link.Foreground = SystemParameters.WindowGlassBrush;
         }
 
-        private void SetRegularLink(object sender, MouseEventArgs e)
+        private void SetRegularDiscordLink(object sender, MouseEventArgs e)
         {
             SetRegularMouse(sender, e);
             Discord_Link.Foreground = new BrushConverter().ConvertFrom("#ffffff") as Brush;
+        }
+
+        private void SetHoveredPlusButton(object sender, MouseEventArgs e)
+        {
+            SetHoverMouse(sender, e);
+            Plus_Icon.Foreground = SystemParameters.WindowGlassBrush;
+        }
+
+        private void SetRegularPlusButton(object sender, MouseEventArgs e)
+        {
+            SetRegularMouse(sender, e);
+            Plus_Icon.Foreground = new BrushConverter().ConvertFrom("#ffffff") as Brush;
         }
     }
 }

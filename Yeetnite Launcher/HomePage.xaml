@@ -13,25 +13,33 @@
     <Grid x:Name="ContentGrid">
         <Image x:Name="Fortnite_Background_Image" Height="445" Width="1280" Margin="0,0,0,275" />
         <Rectangle x:Name="Shadow" Margin="0,0,880,275" Fill="Black" Opacity="0.75" d:LayoutOverrides="VerticalAlignment" />
-        <ui:SimpleStackPanel x:Name="Shadow_Content" Width="340" Height="445" Margin="50,30,930,275" d:LayoutOverrides="Width">
-            <TextBlock x:Name="Title" TextWrapping="Wrap" Text="Fortnite" Foreground="White" FontSize="30" FontWeight="Bold"/>
+        <ui:SimpleStackPanel x:Name="Shadow_Content" Margin="50,30,902,275" d:LayoutOverrides="TopMargin, BottomMargin">
+            <TextBlock x:Name="Title_Text" TextWrapping="Wrap" Text="Fortnite" Foreground="White" FontSize="30" FontWeight="Bold"/>
             <TextBlock x:Name="Version_Text" FontWeight="SemiBold" TextWrapping="Wrap" Text="Select Game Version." Foreground="White" FontSize="20"/>
             <TextBlock x:Name="Description" Margin="0,10,60,10" TextWrapping="Wrap" Text="Fortnite includes Battle Royale, the completely free 100-player PvP mode. One giant map. A Battle Bus. Last one standing wins." Foreground="#FFCCCCCC" FontFamily="Segoe UI" />
 
             <ui:SimpleStackPanel Orientation="Horizontal" Margin="0,120,0,0">
                 <Button x:Name="Launch_Button" Width="230" Height="65" Content="Launch" FontWeight="SemiBold" FontSize="20" Foreground="White" Background="#8fbb8a" MouseEnter="SetHoverMouse" MouseLeave="SetRegularMouse" HorizontalAlignment="Center" />
                 <Button Background="#75a36f" MouseEnter="SetHoverMouse" MouseLeave="SetRegularMouse" x:Name="Settings_Button" Width="40" Height="65" HorizontalAlignment="Center" VerticalAlignment="Center" BorderThickness="0,0,0,0">
-                    <fa:ImageAwesome Foreground="White" Icon="Gear" />
+                    <fa:ImageAwesome x:Name="Gear_Icon" Foreground="White" Icon="Gear" />
                 </Button>
             </ui:SimpleStackPanel>
 
             <Separator Margin="0,15,70,5" Width="270" />
 
-            <TextBlock Margin="60,0,144,0" FontSize="18">
-                <Hyperlink x:Name="Discord_Link" MouseEnter="SetHoveredLink" MouseLeave="SetRegularLink" TextDecorations="None" Background="Transparent" Foreground="White" NavigateUri="https://discord.gg/NU89sKzfQX" RequestNavigate="OpenLink">
+            <TextBlock x:Name="Join_Our_Discord" Margin="60,0,130,0" FontSize="18">
+                <Hyperlink x:Name="Discord_Link" MouseEnter="SetHoveredDiscordLink" MouseLeave="SetRegularDiscordLink" TextDecorations="None" Background="Transparent" Foreground="White" NavigateUri="https://discord.gg/NU89sKzfQX" RequestNavigate="OpenLink">
                     Join Our Discord!
                 </Hyperlink>
             </TextBlock>
+        </ui:SimpleStackPanel>
+
+        <ui:SimpleStackPanel Width="1250" Height="260" Margin="15,445,15,15" VerticalAlignment="Top" d:LayoutOverrides="Height">
+            <ui:SimpleStackPanel x:Name="Game_Versions_Panel" Orientation="Horizontal">
+                <TextBlock x:Name="Game_Versions_Text" TextWrapping="Wrap" Text="GAME VERSIONS" Foreground="#FFCECECE" FontSize="18"/>
+                <fa:ImageAwesome Name="Plus_Icon" MouseEnter="SetHoveredPlusButton" MouseLeave="SetRegularPlusButton" Height="18" Margin="10,4" Icon="PlusSquare" Foreground="White" />
+            </ui:SimpleStackPanel>
+
         </ui:SimpleStackPanel>
     </Grid>
 </Page>
