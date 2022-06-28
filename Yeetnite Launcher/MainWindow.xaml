@@ -9,7 +9,8 @@
         Title="Yeetnite Launcher" Height="720" Width="1280"
         ResizeMode="CanMinimize"
         Loaded="OnLaunched"
-        AcrylicWindowStyle="NoIcon">
+        AcrylicWindowStyle="NoIcon"
+        Closing="Shutdown">
     <Grid>
         <Frame x:Name="RootFrame" />
     </Grid>

@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using Newtonsoft.Json;
 
@@ -50,18 +51,51 @@ namespace Yeetnite_Launcher
             Save();
         }
 
-        public static string[] FortniteEntries()
+        public static List<FortniteEntrySchema> FortniteEntries()
         {
             Debug.Assert(settings != null);
-            return (settings != null) ? settings.FortniteEntries : System.Array.Empty<string>();
+            return (settings != null) ? settings.FortniteEntries : new List<FortniteEntrySchema> { };
         }
 
-        public static void FortniteEntries(string[] fortniteEntries)
+        public static void FortniteEntries(List<FortniteEntrySchema> fortniteEntries)
         {
             Debug.Assert(settings != null);
             if (settings == null) return;
 
             settings.FortniteEntries = fortniteEntries;
+            Save();
+        }
+
+        public static void AddFortniteEntry(FortniteEntrySchema fortniteEntry)
+        {
+            settings?.FortniteEntries.Add(fortniteEntry);
+            Save();
+        }
+
+        public static void RemoveFortniteEntry(FortniteEntrySchema fortniteEntry)
+        {
+            settings?.FortniteEntries.Remove(fortniteEntry);
+            Save();
+        }
+
+        public static void RemoveFortniteEntryAtIndex(int index)
+        {
+            settings?.FortniteEntries.RemoveAt(index);
+            Save();
+        }
+
+        public static int FortniteSelectedIndex()
+        {
+            Debug.Assert(settings != null);
+            return (settings != null) ? settings.FortniteSelectedIndex : -1;
+        }
+
+        public static void ForntiteSelectedIndex(int selectedIndex)
+        {
+            Debug.Assert(settings != null);
+            if (settings == null) return;
+
+            settings.FortniteSelectedIndex = selectedIndex;
             Save();
         }
 

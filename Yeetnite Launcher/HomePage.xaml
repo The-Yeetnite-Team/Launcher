@@ -20,12 +20,12 @@
 
             <ui:SimpleStackPanel Orientation="Horizontal" Margin="0,120,0,0">
                 <Button x:Name="Launch_Button" Width="230" Height="65" Content="Launch" FontWeight="SemiBold" FontSize="20" Foreground="White" Background="#8fbb8a" MouseEnter="SetHoverMouse" MouseLeave="SetRegularMouse" HorizontalAlignment="Center" />
-                <Button Background="#75a36f" MouseEnter="SetHoverMouse" MouseLeave="SetRegularMouse" x:Name="Settings_Button" Width="40" Height="65" HorizontalAlignment="Center" VerticalAlignment="Center" BorderThickness="0,0,0,0">
+                <Button Background="#75a36f" Click="EditVersion" MouseEnter="SetHoverMouse" MouseLeave="SetRegularMouse" x:Name="Settings_Button" Width="40" Height="65" HorizontalAlignment="Center" VerticalAlignment="Center" BorderThickness="0,0,0,0">
                     <fa:ImageAwesome x:Name="Gear_Icon" Foreground="White" Icon="Gear" />
                 </Button>
             </ui:SimpleStackPanel>
 
-            <Separator Margin="0,15,70,5" Width="270" />
+            <Separator Margin="0,15,56,5" />
 
             <TextBlock x:Name="Join_Our_Discord" Margin="60,0,130,0" FontSize="18">
                 <Hyperlink x:Name="Discord_Link" MouseEnter="SetHoveredDiscordLink" MouseLeave="SetRegularDiscordLink" TextDecorations="None" Background="Transparent" Foreground="White" NavigateUri="https://discord.gg/NU89sKzfQX" RequestNavigate="OpenLink">
@@ -37,9 +37,8 @@
         <ui:SimpleStackPanel Width="1250" Height="260" Margin="15,445,15,15" VerticalAlignment="Top" d:LayoutOverrides="Height">
             <ui:SimpleStackPanel x:Name="Game_Versions_Panel" Orientation="Horizontal">
                 <TextBlock x:Name="Game_Versions_Text" TextWrapping="Wrap" Text="GAME VERSIONS" Foreground="#FFCECECE" FontSize="18"/>
-                <fa:ImageAwesome Name="Plus_Icon" MouseEnter="SetHoveredPlusButton" MouseLeave="SetRegularPlusButton" Height="18" Margin="10,4" Icon="PlusSquare" Foreground="White" />
+                <fa:ImageAwesome Name="Plus_Icon" MouseLeftButtonDown="AddVersion" MouseEnter="SetHoveredPlusButton" MouseLeave="SetRegularPlusButton" Height="18" Margin="10,4" Icon="PlusSquare" Foreground="White" />
             </ui:SimpleStackPanel>
-
         </ui:SimpleStackPanel>
     </Grid>
 </Page>

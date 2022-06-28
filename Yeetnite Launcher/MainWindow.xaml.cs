@@ -21,5 +21,10 @@ namespace Yeetnite_Launcher
             if (Settings.Username() != string.Empty) RootFrame.Navigate(new HomePage());
             else RootFrame.Navigate(new LoginPage());
         }
+
+        private void Shutdown(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            Application.Current.Shutdown();
+        }
     }
 }

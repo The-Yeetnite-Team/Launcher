@@ -1,34 +1,23 @@
-﻿namespace Yeetnite_Launcher
+﻿using System.Collections.Generic;
+
+namespace Yeetnite_Launcher
 {
     internal class SettingsSchema
     {
-        private string _username;
-        private string _accessToken;
-        private string[] _fortniteEntries;
-
         public SettingsSchema()
         {
-            _username = string.Empty;
-            _accessToken = string.Empty;
-            _fortniteEntries = System.Array.Empty<string>();
+            Username = string.Empty;
+            AccessToken = string.Empty;
+            FortniteEntries = new List<FortniteEntrySchema> { };
+            FortniteSelectedIndex = -1;
         }
 
-        public string Username
-        {
-            get { return _username; }
-            set { _username = value; }
-        }
+        public string Username { get; set; }
 
-        public string AccessToken
-        {
-            get { return _accessToken; }
-            set { _accessToken = value; }
-        }
+        public string AccessToken { get; set; }
 
-        public string[] FortniteEntries
-        {
-            get { return _fortniteEntries; }
-            set { _fortniteEntries = value; }
-        }
+        public List<FortniteEntrySchema> FortniteEntries { get; set; }
+
+        public int FortniteSelectedIndex { get; set; }
     }
 }
