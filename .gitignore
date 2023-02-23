@@ -1,3 +1,9 @@
 .vs
 Yeetnite Launcher/bin
 Yeetnite Launcher/obj
+
+# Unneeded files by Rider
+**.idea/workspace.xml
+**.idea/usage.statistics.xml
+**.idea/tasks.xml
+**.idea/shelf** ## Shelved git changes

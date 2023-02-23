@@ -9,6 +9,7 @@ namespace Yeetnite_Launcher
             Username = string.Empty;
             AccessToken = string.Empty;
             FortniteEntries = new List<FortniteEntrySchema> { };
+            FortniteVersionsStored = new List<string> { };
             FortniteSelectedIndex = -1;
         }
 
@@ -17,6 +18,8 @@ namespace Yeetnite_Launcher
         public string AccessToken { get; set; }
 
         public List<FortniteEntrySchema> FortniteEntries { get; set; }
+
+        public List<string> FortniteVersionsStored { get; set; }
 
         public int FortniteSelectedIndex { get; set; }
     }

@@ -21,7 +21,7 @@ namespace Yeetnite_Launcher
 
         private async void Login(object sender, RoutedEventArgs e)
         {
-            if (Username_Field.Text == "" || Password_Field.Password == "")
+            if (UsernameField.Text == "" || PasswordField.Password == "")
             {
                 Toast.ShowError("Please fill in all required fields and try again");
                 return;
@@ -30,7 +30,7 @@ namespace Yeetnite_Launcher
 
             try
             {
-                string response = await httpClient.GetStringAsync(string.Format("https://www.yeetnite.ml/api/launcherLogin?username={0}&password={1}", Username_Field.Text, Password_Field.Password));
+                string response = await httpClient.GetStringAsync(string.Format("https://api.yeetnite.ml:444/api/v3/launcher_login.php?username={0}&password={1}", UsernameField.Text, PasswordField.Password));
                 if (response.Contains("Invalid username or password"))
                 {
                     Toast.ShowError("Invalid username or password");

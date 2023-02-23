@@ -66,9 +66,25 @@ namespace Yeetnite_Launcher
             Save();
         }
 
+        public static List<string> FortniteVersionsStored()
+        {
+            Debug.Assert(settings != null);
+            return (settings != null) ? settings.FortniteVersionsStored : new List<string> { };
+        }
+
+        public static void FortniteVersionsStored(List<string> fortniteVersionsStored)
+        {
+            Debug.Assert(settings != null);
+            if (settings == null) return;
+
+            settings.FortniteVersionsStored = fortniteVersionsStored;
+            Save();
+        }
+
         public static void AddFortniteEntry(FortniteEntrySchema fortniteEntry)
         {
             settings?.FortniteEntries.Add(fortniteEntry);
+            settings?.FortniteVersionsStored.Add(fortniteEntry.Version);
             Save();
         }
 
