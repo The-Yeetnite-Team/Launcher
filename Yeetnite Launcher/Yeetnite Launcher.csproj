@@ -57,4 +57,10 @@
     </Resource>
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Assets\version_image.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

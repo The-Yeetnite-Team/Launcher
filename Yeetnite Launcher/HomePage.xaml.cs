@@ -1,4 +1,5 @@
-﻿using FontAwesome.WPF;
+﻿using System;
+using FontAwesome.WPF;
 using Lunar;
 using Ookii.Dialogs.Wpf;
 using System.Diagnostics;
@@ -11,53 +12,105 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using ModernWpf.Controls;
+using WinRT;
 
 namespace Yeetnite_Launcher
 {
     /// <summary>
     /// Interaction logic for HomePage.xaml
     /// </summary>
-    public partial class HomePage : Page
+    public partial class HomePage
     {
-        private Regex _legacyVersionFormat = new (@"^[0-9]{1}\.[0-9]{1}\.[0-9]{1}$");
-        private Regex _modernVersionFormat = new (@"^[0-9]{1,2}\.[0-9]{1,2}$");
+        private readonly Regex _legacyVersionFormat = new (@"^[0-9]{1}\.[0-9]{1}\.[0-9]{1}$");
+        private readonly Regex _modernVersionFormat = new (@"^[0-9]{1,2}\.[0-9]{1,2}$");
         
-        private string _version = "", _install_path = "";
+        private string _version = "", _installPath = "";
 
-        private Window? popup;
-        private TextBox? Install_Location_Entry;
-        private TextBox? Version_Entry;
-        private Button? Add_Version_Button;
+        private Window? _popup;
+        private TextBox? _installLocationEntry;
+        private TextBox? _versionEntry;
+        private Button? _addVersionButton;
 
         public HomePage()
         {
             InitializeComponent();
 
-            FortniteBackgroundImage.Source = new BitmapImage(new System.Uri(string.Format("/Assets/Home-Background/{0}.jpg", new System.Random().Next(1, 10)), System.UriKind.Relative));
+            FortniteBackgroundImage.Source = new BitmapImage(new Uri($"/Assets/Home-Background/{new Random().Next(1, 10)}.jpg", UriKind.Relative));
+            if (Settings.FortniteSelectedIndex() != -1)
+            {
+                SelectedVersionText.Text = Settings.FortniteVersionsStored()[Settings.FortniteSelectedIndex()];
+            }
+            
             for (int i = 0; i < Settings.FortniteEntries().Count; i++)
             {
-                ModernWpf.Controls.SimpleStackPanel version = new()
-                {
-                    Orientation = Orientation.Vertical,
-                    Height = 190
-                };
-                Image background = new()
-                {
-                    Width = 166,
-                    Height = 250,
-                    Opacity = 0.5,
-                    Source = new BitmapImage(new System.Uri("/Assets/version_image.jpg", System.UriKind.Relative)),
-                    Margin = new Thickness
-                    {
-                        Left = i == 0 ? 20 : 10,
-                        Right = 10
-                    }
-                };
-
-                version.Children.Add(background);
-
-                VersionsList.Children.Add(version);
+                AddFortniteVersionToList(Settings.FortniteEntries()[i], i == 0 ? 20 : 10);
             }
+        }
+
+        private void AddFortniteVersionToList(FortniteEntrySchema fortniteEntry, int leftPadding=10)
+        {
+            SimpleStackPanel version = new()
+            {
+                Orientation = Orientation.Vertical,
+                Height = 220
+            };
+
+            SimpleStackPanel buttonContent = new()
+            {
+                Orientation = Orientation.Vertical,
+                Margin = new Thickness
+                {
+                    Top = 180,
+                    Left = 45
+                },
+                Height = 75,
+                Width = 146
+            };
+
+            buttonContent.Children.Add(
+                new TextBlock
+                {
+                    Text = fortniteEntry.Version,
+                    FontSize = 16,
+                    FontWeight = FontWeights.SemiBold,
+                    Foreground = new SolidColorBrush(Color.FromRgb(255, 255, 255))
+                }
+            );
+            
+            buttonContent.Children.Add(
+                new Rectangle
+                {
+                    Width = 200,
+                    Height = 200,
+                    Fill = new LinearGradientBrush(Color.FromArgb(255, 0, 0, 0), Color.FromArgb(0, 0, 0, 0), new Point(0,1),new Point(0,0))
+                }
+            );
+
+            Button selectFortnite = new()
+            {
+                Width = 128,
+                Height = 220,
+                Background = new ImageBrush(new BitmapImage(new Uri("Assets/version_image.jpg", UriKind.Relative))),
+                Margin = new Thickness
+                {
+                    Left = leftPadding,
+                    Right = 10
+                },
+                Content = buttonContent
+            };
+
+            selectFortnite.MouseEnter += SetHoverMouse;
+            selectFortnite.MouseLeave += SetRegularMouse;
+            selectFortnite.Click += (sender, _) =>
+            {
+                string selectedVersion = ((Button)sender).Content.As<SimpleStackPanel>().Children[0].As<TextBlock>().Text;
+                Settings.FortniteSelectedIndex(Settings.FortniteVersionsStored().IndexOf(selectedVersion));
+                SelectedVersionText.Text = selectedVersion;
+            };
+
+            version.Children.Add(selectFortnite);
+            VersionsList.Children.Add(version);
         }
 
         private void SetHoverMouse(object sender, MouseEventArgs e)
@@ -112,26 +165,25 @@ namespace Yeetnite_Launcher
 
         private void EditVersion(object sender, RoutedEventArgs e)
         {
+            e.Handled = true;
             if (Settings.FortniteSelectedIndex() == -1)
             {
                 Toast.ShowError("Please select a version first");
-                e.Handled = true;
                 return;
             }
-            e.Handled = true;
         }
 
         private void SetPopupHoverMouse(object sender, MouseEventArgs e)
         {
-            if (popup == null) return;
-            popup.Cursor = Cursors.Hand;
+            if (_popup == null) return;
+            _popup.Cursor = Cursors.Hand;
             e.Handled = true;
         }
 
         private void SetPopupRegularMouse(object sender, MouseEventArgs e)
         {
-            if (popup == null) return;
-            popup.Cursor = Cursors.Arrow;
+            if (_popup == null) return;
+            _popup.Cursor = Cursors.Arrow;
             e.Handled = true;
         }
 
@@ -148,7 +200,7 @@ namespace Yeetnite_Launcher
 
         private void InstallLocationTextChanged(object sender, TextChangedEventArgs e)
         {
-            _install_path = Install_Location_Entry?.Text ?? string.Empty;
+            _installPath = _installLocationEntry?.Text ?? string.Empty;
             e.Handled = true;
         }
 
@@ -157,36 +209,42 @@ namespace Yeetnite_Launcher
             string selectedPath = SelectFolder();
             if (selectedPath == string.Empty) return;
 
-            _install_path = selectedPath;
-            if (Install_Location_Entry != null)
-                Install_Location_Entry.Text = selectedPath;
+            _installPath = selectedPath;
+            if (_installLocationEntry != null)
+                _installLocationEntry.Text = selectedPath;
 
             e.Handled = true;
         }
         
         private void VersionTextChanged(object sender, TextChangedEventArgs e)
         {
-            _version = Version_Entry?.Text ?? string.Empty;
+            _version = _versionEntry?.Text ?? string.Empty;
             e.Handled = true;
         }
 
         private void SaveVersion(object sender, RoutedEventArgs e)
         {
-            if (_version == string.Empty || _install_path == string.Empty)
+            if (_version == string.Empty || _installPath == string.Empty)
             {
                 MessageBox.Show("One or more required fields are empty", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
-            if (!Directory.Exists(_install_path + "\\"))
+            if (!Directory.Exists(_installPath + "\\"))
             {
                 MessageBox.Show("Invalid installation path. Folder does not exist.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
-            if (!Directory.Exists(_install_path + "\\Engine") || !Directory.Exists(_install_path + "\\FortniteGame"))
+            if (!Directory.Exists(_installPath + "\\Engine") || !Directory.Exists(_installPath + "\\FortniteGame"))
             {
                 MessageBox.Show("Invalid installation path. Make sure the \"FortniteGame\" and \"Engine\" folders exist", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            if (!File.Exists(_installPath + "\\FortniteGame\\Binaries\\Win64\\FortniteClient-Win64-Shipping.exe"))
+            {
+                MessageBox.Show("Fortnite was not found within the install folder.\n\nYour version is likely corrupt. Re-download Fortnite and try again.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -201,29 +259,54 @@ namespace Yeetnite_Launcher
                 MessageBox.Show($"Fortnite {_version} is already stored as a version", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
-
-            Settings.AddFortniteEntry(new FortniteEntrySchema(_version, _install_path));
-            popup?.Close();
+            FortniteEntrySchema versionEntry = new FortniteEntrySchema(_version, _installPath);
+            Settings.AddFortniteEntry(versionEntry);
+            AddFortniteVersionToList(versionEntry);
+            _popup?.Close();
         }
 
-        private void Launch(object sender, RoutedEventArgs e)
+        private async void Launch(object sender, RoutedEventArgs e)
         {
+            e.Handled = true;
+            if (Settings.FortniteSelectedIndex() == -1)
+            {
+                Toast.ShowError("Please select a Fortnite version to launch");
+                return;
+            }
+
+            string installPath = Settings.FortniteEntries()[Settings.FortniteSelectedIndex()].InstallPath;
+
+            if (!File.Exists($"{installPath}\\FortniteGame\\Binaries\\Win64\\FortniteClient-Win64-Shipping.exe"))
+            {
+                Toast.ShowError("Your Fortnite install seems to be corrupt\nPlease reinstall Fortnite and try again.");
+                return;
+            }
+            
             Process fnProcess = new();
-            fnProcess.StartInfo.FileName = "F:\\Builds\\Season 6\\Fortnite 6.30\\FortniteGame\\Binaries\\Win64\\FortniteLauncher.exe";
-            fnProcess.StartInfo.Arguments = "-epicapp=Fortnite -epicenv=Prod -epiclocale=en-us -epicportal -EpicPortal -HTTP=WinInet -skippatchcheck -NOSSLPINNING -AUTH_TYPE=password -AUTH_LOGIN=Revvz -AUTH_PASSWORD=ed79a237cda964ee -noeac -fromfl=be -fltoken=f7b9gah4h5380d10f721dd6a";
-            fnProcess.StartInfo.WorkingDirectory = "F:\\Builds\\Season 6\\Fortnite 6.30\\FortniteGame\\Binaries\\Win64";
+            fnProcess.StartInfo.FileName = $"{installPath}\\FortniteGame\\Binaries\\Win64\\FortniteClient-Win64-Shipping.exe";
+            fnProcess.StartInfo.Arguments = "-epicapp=Fortnite -epicenv=Prod -epiclocale=en-us -epicportal -EpicPortal -AUTH_TYPE=password -AUTH_LOGIN=Revvz -AUTH_PASSWORD=ed79a237cda964ee -noeac -fromfl=be -fltoken=f7b9gah4h5380d10f721dd6a";
+            fnProcess.StartInfo.WorkingDirectory = $"{installPath}\\FortniteGame\\Binaries\\Win64";
             fnProcess.Start();
 
 /*            LibraryMapper mapper = new LibraryMapper(fnProcess, "C:\\Users\\antonios\\Desktop\\repos\\Yeetnite\\x64\\Debug\\YeetniteClientDLL.dll");
             mapper.MapLibrary();*/
 
+            LaunchButton.IsEnabled = false;
+            LaunchButton.Content = "FORTNITE RUNNING";
+            SettingsButton.IsEnabled = false;
+
+            await fnProcess.WaitForExitAsync();
             fnProcess.Dispose();
+            
+            LaunchButton.IsEnabled = true;
+            SettingsButton.IsEnabled = true;
+            LaunchButton.Content = "Launch";
         }
 
         private void AddVersion(object sender, MouseButtonEventArgs e)
         {
             // Build out the popup window UI
-            StackPanel popupUI = new()
+            StackPanel popupUi = new()
             {
                 Margin = new Thickness()
                 {
@@ -233,7 +316,7 @@ namespace Yeetnite_Launcher
                     Bottom = 10,
                 }
             };
-            TextBlock Title_Text = new()
+            TextBlock titleText = new()
             {
                 FontSize = 28,
                 FontWeight = FontWeights.SemiBold,
@@ -241,7 +324,7 @@ namespace Yeetnite_Launcher
                 Text = "Add A Version",
                 TextDecorations = TextDecorations.Underline,
             };
-            TextBlock Install_Path_Text = new()
+            TextBlock installPathText = new()
             {
                 FontSize = 18,
                 Margin = new Thickness()
@@ -251,7 +334,7 @@ namespace Yeetnite_Launcher
                 HorizontalAlignment = HorizontalAlignment.Left,
                 Text = "Install Location:"
             };
-            StackPanel Location_Entry_Panel = new()
+            StackPanel locationEntryPanel = new()
             {
                 Orientation = Orientation.Horizontal,
                 Margin = new Thickness()
@@ -260,7 +343,7 @@ namespace Yeetnite_Launcher
                 },
             };
 
-            Install_Location_Entry = new()
+            _installLocationEntry = new()
             {
                 Width = 370,
                 Height = 25,
@@ -270,9 +353,9 @@ namespace Yeetnite_Launcher
                 AcceptsReturn = false
             };
 
-            Install_Location_Entry.TextChanged += InstallLocationTextChanged;
+            _installLocationEntry.TextChanged += InstallLocationTextChanged;
 
-            ImageAwesome Folder_Icon = new()
+            ImageAwesome folderIcon = new()
             {
                 Icon = FontAwesomeIcon.Folder,
                 Foreground = new BrushConverter().ConvertFrom("#ffd664") as Brush,
@@ -283,16 +366,16 @@ namespace Yeetnite_Launcher
                 }
             };
 
-            Folder_Icon.MouseEnter += SetPopupHoverMouse;
-            Folder_Icon.MouseLeave += SetPopupRegularMouse;
-            Folder_Icon.MouseEnter += (object Sender, MouseEventArgs args) => Folder_Icon.Foreground = new BrushConverter().ConvertFrom("#ffc21a") as Brush;
-            Folder_Icon.MouseLeave += (object Sender, MouseEventArgs args) => Folder_Icon.Foreground = new BrushConverter().ConvertFrom("#ffd664") as Brush;
-            Folder_Icon.MouseLeftButtonDown += SetPathToFolderSelection;
+            folderIcon.MouseEnter += SetPopupHoverMouse;
+            folderIcon.MouseLeave += SetPopupRegularMouse;
+            folderIcon.MouseEnter += (Sender, args) => folderIcon.Foreground = new BrushConverter().ConvertFrom("#ffc21a") as Brush;
+            folderIcon.MouseLeave += (Sender, args) => folderIcon.Foreground = new BrushConverter().ConvertFrom("#ffd664") as Brush;
+            folderIcon.MouseLeftButtonDown += SetPathToFolderSelection;
 
-            Location_Entry_Panel.Children.Add(Install_Location_Entry);
-            Location_Entry_Panel.Children.Add(Folder_Icon);
+            locationEntryPanel.Children.Add(_installLocationEntry);
+            locationEntryPanel.Children.Add(folderIcon);
 
-            TextBlock Version_Text = new()
+            TextBlock versionText = new()
             {
                 FontSize = 18,
                 Margin = new Thickness()
@@ -304,7 +387,7 @@ namespace Yeetnite_Launcher
                 Text = "Fortnite Version:"
             };
             
-            Version_Entry = new()
+            _versionEntry = new TextBox
             {
                 Width = 75,
                 Height = 25,
@@ -314,12 +397,12 @@ namespace Yeetnite_Launcher
                 AcceptsReturn = false
             };
 
-            Version_Entry.TextChanged += VersionTextChanged;
+            _versionEntry.TextChanged += VersionTextChanged;
 
-            Add_Version_Button = new()
+            _addVersionButton = new Button
             {
                 HorizontalAlignment = HorizontalAlignment.Center,
-                Margin = new Thickness()
+                Margin = new Thickness
                 {
                     Top = 25
                 },
@@ -327,18 +410,18 @@ namespace Yeetnite_Launcher
                 FontSize = 18,
             };
 
-            Add_Version_Button.MouseEnter += SetPopupHoverMouse;
-            Add_Version_Button.MouseLeave += SetPopupRegularMouse;
-            Add_Version_Button.Click += SaveVersion;
+            _addVersionButton.MouseEnter += SetPopupHoverMouse;
+            _addVersionButton.MouseLeave += SetPopupRegularMouse;
+            _addVersionButton.Click += SaveVersion;
 
-            popupUI.Children.Add(Title_Text);
-            popupUI.Children.Add(Install_Path_Text);
-            popupUI.Children.Add(Location_Entry_Panel);
-            popupUI.Children.Add(Version_Text);
-            popupUI.Children.Add(Version_Entry);
-            popupUI.Children.Add(Add_Version_Button);
+            popupUi.Children.Add(titleText);
+            popupUi.Children.Add(installPathText);
+            popupUi.Children.Add(locationEntryPanel);
+            popupUi.Children.Add(versionText);
+            popupUi.Children.Add(_versionEntry);
+            popupUi.Children.Add(_addVersionButton);
 
-            popup = new()
+            _popup = new()
             {
                 ResizeMode = ResizeMode.NoResize,
                 WindowStyle = WindowStyle.None,
@@ -346,9 +429,9 @@ namespace Yeetnite_Launcher
                 WindowStartupLocation = WindowStartupLocation.CenterOwner,
                 Width = 450,
                 Background = new BrushConverter().ConvertFrom("#1f1f1f") as Brush,
-                Content = popupUI
+                Content = popupUi
             };
-            popup.Show();
+            _popup.Show();
         }
     }
 }

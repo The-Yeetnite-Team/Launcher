@@ -2,20 +2,13 @@
 {
     internal class FortniteEntrySchema
     {
-
-        public FortniteEntrySchema()
+        public FortniteEntrySchema(string version, string installPath)
         {
-            Version = string.Empty;
-            InstallPath = string.Empty;
+            Version = version;
+            InstallPath = installPath;
         }
 
-        public FortniteEntrySchema(string Version, string InstallPath)
-        {
-            this.Version = Version;
-            this.InstallPath = InstallPath;
-        }
-
-        public string Version { get; set; }
-        public string InstallPath { get; set; }
+        public string Version { get; }
+        public string InstallPath { get; }
     }
 }

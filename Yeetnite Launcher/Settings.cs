@@ -3,134 +3,136 @@ using System.Diagnostics;
 using System.IO;
 using Newtonsoft.Json;
 
-namespace Yeetnite_Launcher
+namespace Yeetnite_Launcher;
+
+internal abstract class Settings
 {
-    internal class Settings
+    private static SettingsSchema? _settings;
+
+    public static void Init()
     {
-        public static SettingsSchema? settings;
-
-        public static void Init()
+        if (File.Exists("settings.json"))
         {
-            if (File.Exists("settings.json"))
-                Sync();
-            else
-            {
-                File.Create("settings.json").Close();
-                settings = new();
-                Save();
-            }
+            Sync();
         }
-
-        public static string Username()
+        else
         {
-            Debug.Assert(settings != null);
-            return (settings != null) ? settings.Username : string.Empty;
-        }
-
-        public static void Username(string username)
-        {
-            Debug.Assert(settings != null);
-            if (settings == null) return;
-
-            settings.Username = username;
+            File.Create("settings.json").Close();
+            _settings = new SettingsSchema();
             Save();
         }
+    }
 
-        public static string AccessToken()
-        {
-            Debug.Assert(settings != null);
-            return (settings != null) ? settings.AccessToken : string.Empty;
-        }
+    public static string Username()
+    {
+        Debug.Assert(_settings != null);
+        return _settings.Username;
+    }
 
-        public static void AccessToken(string accessToken)
-        {
-            Debug.Assert(settings != null);
-            if (settings == null) return;
+    public static void Username(string username)
+    {
+        Debug.Assert(_settings != null);
 
-            settings.AccessToken = accessToken;
-            Save();
-        }
+        _settings.Username = username;
+        Save();
+    }
 
-        public static List<FortniteEntrySchema> FortniteEntries()
-        {
-            Debug.Assert(settings != null);
-            return (settings != null) ? settings.FortniteEntries : new List<FortniteEntrySchema> { };
-        }
+    public static string AccessToken()
+    {
+        Debug.Assert(_settings != null);
+        return _settings.AccessToken;
+    }
 
-        public static void FortniteEntries(List<FortniteEntrySchema> fortniteEntries)
-        {
-            Debug.Assert(settings != null);
-            if (settings == null) return;
+    public static void AccessToken(string accessToken)
+    {
+        Debug.Assert(_settings != null);
 
-            settings.FortniteEntries = fortniteEntries;
-            Save();
-        }
+        _settings.AccessToken = accessToken;
+        Save();
+    }
 
-        public static List<string> FortniteVersionsStored()
-        {
-            Debug.Assert(settings != null);
-            return (settings != null) ? settings.FortniteVersionsStored : new List<string> { };
-        }
+    public static List<FortniteEntrySchema> FortniteEntries()
+    {
+        Debug.Assert(_settings != null);
+        return _settings.FortniteEntries;
+    }
 
-        public static void FortniteVersionsStored(List<string> fortniteVersionsStored)
-        {
-            Debug.Assert(settings != null);
-            if (settings == null) return;
+    public static void FortniteEntries(List<FortniteEntrySchema> fortniteEntries)
+    {
+        Debug.Assert(_settings != null);
 
-            settings.FortniteVersionsStored = fortniteVersionsStored;
-            Save();
-        }
+        _settings.FortniteEntries = fortniteEntries;
+        Save();
+    }
 
-        public static void AddFortniteEntry(FortniteEntrySchema fortniteEntry)
-        {
-            settings?.FortniteEntries.Add(fortniteEntry);
-            settings?.FortniteVersionsStored.Add(fortniteEntry.Version);
-            Save();
-        }
+    public static List<string> FortniteVersionsStored()
+    {
+        Debug.Assert(_settings != null);
+        return _settings.FortniteVersionsStored;
+    }
 
-        public static void RemoveFortniteEntry(FortniteEntrySchema fortniteEntry)
-        {
-            settings?.FortniteEntries.Remove(fortniteEntry);
-            Save();
-        }
+    public static void FortniteVersionsStored(List<string> fortniteVersionsStored)
+    {
+        Debug.Assert(_settings != null);
 
-        public static void RemoveFortniteEntryAtIndex(int index)
-        {
-            settings?.FortniteEntries.RemoveAt(index);
-            Save();
-        }
+        _settings.FortniteVersionsStored = fortniteVersionsStored;
+        Save();
+    }
 
-        public static int FortniteSelectedIndex()
-        {
-            Debug.Assert(settings != null);
-            return (settings != null) ? settings.FortniteSelectedIndex : -1;
-        }
+    public static void AddFortniteEntry(FortniteEntrySchema fortniteEntry)
+    {
+        Debug.Assert(_settings != null);
 
-        public static void ForntiteSelectedIndex(int selectedIndex)
-        {
-            Debug.Assert(settings != null);
-            if (settings == null) return;
+        _settings.FortniteEntries.Add(fortniteEntry);
+        _settings.FortniteVersionsStored.Add(fortniteEntry.Version);
+        Save();
+    }
 
-            settings.FortniteSelectedIndex = selectedIndex;
-            Save();
-        }
+    public static void RemoveFortniteEntry(FortniteEntrySchema fortniteEntry)
+    {
+        Debug.Assert(_settings != null);
 
-        public static void Sync()
-        {
-            using StreamReader file = new("settings.json");
-            settings = JsonConvert.DeserializeObject<SettingsSchema>(file.ReadToEnd());
-        }
+        _settings.FortniteEntries.Remove(fortniteEntry);
+        Save();
+    }
 
-        public static void Save()
-        {
-            using StreamWriter file = new("settings.json");
-            file.Write(JsonConvert.SerializeObject(settings));
-        }
+    public static void RemoveFortniteEntryAtIndex(int index)
+    {
+        Debug.Assert(_settings != null);
 
-        public static void Clear()
-        {
-            settings = new();
-            Save();
-        }
+        _settings.FortniteEntries.RemoveAt(index);
+        Save();
+    }
+
+    public static int FortniteSelectedIndex()
+    {
+        Debug.Assert(_settings != null);
+        return _settings.FortniteSelectedIndex;
+    }
+
+    public static void FortniteSelectedIndex(int selectedIndex)
+    {
+        Debug.Assert(_settings != null);
+
+        _settings.FortniteSelectedIndex = selectedIndex;
+        Save();
+    }
+
+    private static void Sync()
+    {
+        using StreamReader file = new("settings.json");
+        _settings = JsonConvert.DeserializeObject<SettingsSchema>(file.ReadToEnd());
+    }
+
+    private static void Save()
+    {
+        using StreamWriter file = new("settings.json");
+        file.Write(JsonConvert.SerializeObject(_settings));
+    }
+
+    public static void Clear()
+    {
+        _settings = new SettingsSchema();
+        Save();
     }
 }
